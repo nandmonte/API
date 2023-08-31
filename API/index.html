@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de CEP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 10px;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultado {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #resultado p {
+            margin: 5px 0;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta de CEP</h1>
+        <input type="text" id="cepInput" placeholder="Digite o CEP">
+        <button id="buscarButton">Buscar</button>
+        
+        <div id="resultado">
+            <p><strong>CEP:</strong> <span id="cep"></span></p>
+            <p><strong>Logradouro:</strong> <span id="logradouro"></span></p>
+            <p><strong>Bairro:</strong> <span id="bairro"></span></p>
+            <p><strong>Cidade:</strong> <span id="cidade"></span></p>
+            <p><strong>Estado:</strong> <span id="estado"></span></p>
+        </div>
+    </div>
+
+    <script>
+        const cepInput = document.getElementById("cepInput");
+        const buscarButton = document.getElementById("buscarButton");
+        const resultadoDiv = document.getElementById("resultado");
+        const cepSpan = document.getElementById("cep");
+        const logradouroSpan = document.getElementById("logradouro");
+        const bairroSpan = document.getElementById("bairro");
+        const cidadeSpan = document.getElementById("cidade");
+        const estadoSpan = document.getElementById("estado");
+        
+        buscarButton.addEventListener("click", () => {
+            const cep = cepInput.value;
+            if (cep) {
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        cepSpan.textContent = data.cep;
+                        logradouroSpan.textContent = data.logradouro;
+                        bairroSpan.textContent = data.bairro;
+                        cidadeSpan.textContent = data.localidade;
+                        estadoSpan.textContent = data.uf;
+                        resultadoDiv.style.display = "block";
+                    })
+                    .catch(error => {
+                        console.error("Erro ao buscar o CEP:", error);
+                        resultadoDiv.style.display = "none";
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
